@@ -1,2 +1,11 @@
-# screen-recorder
-Screen Recorder Project made using Python 3
+## Installation
+Install packages by following command
+```shell
+pip install pyautogui opencv-python tkinter
+```
+
+## Run Application
+Open Terminal and type
+```shell
+python main.py
+```
