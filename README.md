@@ -1,7 +1,7 @@
 ## Installation
 Install packages by following command
 ```shell
-pip install pyautogui opencv-python tkinter
+pip install pyautogui opencv-python tkinter Pillow keyboard
 ```
 
 ## Run Application
