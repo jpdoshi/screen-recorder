@@ -5,8 +5,8 @@ import tkinter.filedialog as fd
 from tkinter.messagebox import showinfo
 
 import pyautogui
-import cv2
 import numpy as np
+import cv2
 
 import threading
 import keyboard
@@ -16,19 +16,20 @@ def start_recording():
     dimensions = (int(res_x.get()), int(res_y.get()))
 
     offset = (int(offset_x.get()), int(offset_y.get()))
-    fps = float(fps_spin.get())
+    divisor = 2.5
+    fps = float(fps_spin.get()) / divisor
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(out_file, fourcc, fps / 2.5, dimensions)
+    out = cv2.VideoWriter(out_file, fourcc, fps, dimensions)
 
     root.iconify()
 
     while True:
-        f = pyautogui.screenshot(region=(offset[0], offset[1], dimensions[0], dimensions[1]))
-        f = np.array(f)
+        img = pyautogui.screenshot(region=(offset[0], offset[1], dimensions[0], dimensions[1]))
+        img = np.array(img)
         
-        f = cv2.cvtColor(f, cv2.COLOR_BGR2RGB)
-        out.write(f)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        out.write(img)
 
         if keyboard.is_pressed('f10'):
             break
@@ -106,7 +107,7 @@ fps_lbl.grid(row=3, column=0, padx=4, pady=4, sticky='w')
 
 fps_spin = Spinbox(frame, width=4)
 fps_spin.grid(row=3, column=1, padx=4, pady=4, sticky='w')
-fps_spin.set(25)
+fps_spin.set(30)
 
 action_btn_frame = Frame(frame)
 action_btn_frame.grid(row=4, column=0, columnspan=3, pady=(24, 4))
