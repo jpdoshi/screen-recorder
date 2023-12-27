@@ -1,7 +1,10 @@
 ## Installation
-Install packages by following command
+Install FFMPEG
+https://ffmpeg.org/download.html
+
+Install python packages
 ```shell
-pip install pyautogui opencv-python tkinter Pillow keyboard
+pip install pyautogui tkinter
 ```
 
 ## Run Application
