@@ -1,10 +1,12 @@
 ## Installation
 Install FFMPEG
-https://ffmpeg.org/download.html
+
+- For Windows: https://www.gyan.dev/ffmpeg/builds/
+- extract `bin/ffmpeg.exe` to project folder
 
 Install python packages
 ```shell
-pip install pyautogui tkinter
+pip install pyautogui tk
 ```
 
 ## Run Application

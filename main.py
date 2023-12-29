@@ -4,8 +4,11 @@ from tkinter.ttk import *
 import tkinter.filedialog as fd
 from tkinter.messagebox import showinfo, showerror
 
-import pyautogui # provide clean gui
+import pyautogui
 import subprocess
+
+import platform
+import json
 
 
 def start_recording():
@@ -27,7 +30,18 @@ def record_screen():
     global rec_proc
 
     try:
-        rec_proc = subprocess.Popen(["ffmpeg", "-f", "gdigrab", "-framerate", fps, "-offset_x", off_x, "-offset_y", off_y, "-video_size", dimensions, "-i", "desktop", out_file, "-loglevel", "error"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        os_family = platform.system()
+
+        if os_family == 'Windows':
+            rec_proc = subprocess.Popen(["ffmpeg", "-f", "gdigrab", "-framerate", fps, "-offset_x", off_x, "-offset_y", off_y, "-video_size", dimensions, "-i", "desktop", out_file, "-loglevel", "error"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+
+        if os_family == 'Linux':
+            showerror(title='Error', message="Linux is currently not supported")
+            exit()
+
+        if os_family == 'Darwin':
+            showerror(title='Error', message="MacOS is currently not supported")
+            exit()
 
     except Exception as e:
         print(e)
@@ -66,6 +80,9 @@ def open_file_dialog():
     file_entry.insert(0, location)
 
 
+def_file = open('defaults.json')
+defaults = json.load(def_file)
+
 root = tk.Tk()
 root.title('Record Screen')
 root.resizable(False, False)
@@ -100,8 +117,9 @@ res_lbl_y.grid(row=0, column=2, padx=4)
 res_y = Entry(res_frame, width=8)
 res_y.grid(row=0, column=3, padx=(0, 6))
 
-res_x.insert(0, '1920')
-res_y.insert(0, '1080')
+scr = pyautogui.size()
+res_x.insert(0, scr.width)
+res_y.insert(0, scr.height)
 
 offset_lbl = Label(frame, text='Offset')
 offset_lbl.grid(row=2, column=0, padx=4, pady=4, sticky='w')
@@ -121,15 +139,15 @@ offset_lbl_y.grid(row=0, column=2, padx=4)
 offset_y = Entry(offset_frame, width=8)
 offset_y.grid(row=0, column=3, padx=(0, 8))
 
-offset_x.insert(0, '0')
-offset_y.insert(0, '0')
+offset_x.insert(0, defaults['offset-x'])
+offset_y.insert(0, defaults['offset-y'])
 
 fps_lbl = Label(frame, text='FPS')
 fps_lbl.grid(row=3, column=0, padx=4, pady=4, sticky='w')
 
 fps_spin = Spinbox(frame, width=4)
 fps_spin.grid(row=3, column=1, padx=4, pady=4, sticky='w')
-fps_spin.set(30)
+fps_spin.set(defaults['fps'])
 
 action_btn_frame = Frame(frame)
 action_btn_frame.grid(row=4, column=0, columnspan=3, pady=(24, 4))
@@ -146,4 +164,5 @@ exit_btn.grid(row=0, column=1, padx=2)
 hint_lbl = Label(frame, text='Press Start to start recording', foreground='#388e3c')
 hint_lbl.grid(row=6, column=0, columnspan=3, padx=4)
 
+# initialize window
 root.mainloop()
